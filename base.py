@@ -6,7 +6,7 @@ def ssh_connect(host, username, password):
     child = pexpect.spawn(f'ssh {username}@{host}')
     child.expect("password:")
     child.sendline(password)
-    child.expect(pexpect.EOF)
+    child.expect([r'\$', r'#'])
     print(child.before.decode('utf-8'))
     return child
 
@@ -17,3 +17,6 @@ server_password = input("enter server device password: ")
 client_ip = input("enter client device ip address: ")
 client_username = input("enter client device username: ")
 client_password = input("enter client device password: ")
+
+server_process = ssh_connect(server_ip, server_username, server_password)
+client_process = ssh_connect(client_ip, client_username, client_password)
