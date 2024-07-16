@@ -10,6 +10,11 @@ def ssh_connect(host, username, password):
     print(child.before.decode('utf-8'))
     return child
 
+def send_command(process, command):
+    process.expect(r".+")
+    process.sendline(command)
+    process.expect([r'\$', r'#', r'%'])
+    print(process.before.decode('utf-8'))
 
 
 # server_ip = input("enter server device ip address: ")
@@ -21,11 +26,8 @@ def ssh_connect(host, username, password):
 # client_password = input("enter client device password: ")
 
 
+send_command(server_process, 'ls')
+send_command(client_process,'ls')
 
-client_process.sendline('ls')
-client_process.expect([r'\$', r'#', r'%'])
-print(client_process.before.decode('utf-8'))
-
-server_process.sendline('ls')
-server_process.expect([r'\$', r'#', r'%'])
-print(server_process.before.decode('utf-8'))
+send_command(server_process, 'echo server ready')
+send_command(client_process,'echo client ready')
