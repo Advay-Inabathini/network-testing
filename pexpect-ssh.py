@@ -35,4 +35,5 @@ send_command(server_process, 'echo server ready')
 send_command(client_process,'echo client ready')
 
 send_command(server_process, 'iperf3 -s -p 5500')
+
 send_command(client_process, f'iperf3 -c {server_ip} -p 5500')
