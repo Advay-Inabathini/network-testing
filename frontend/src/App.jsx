@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import RemoteMachineComponent from './components/RemoteMachine';
+import TerminalComponent from './components/Terminal';
+import axios from 'axios';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    const [serverOutput, setServerOutput] = useState('');
+    const [clientOutput, setClientOutput] = useState('');
+    const [serverIp, setServerIp] = useState('');
+    const [clientIp, setClientIp] = useState('');
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    const handleServerConnect = (ip) => {
+        setServerIp(ip);
+    };
 
-export default App
+    const handleClientConnect = (ip) => {
+        setClientIp(ip);
+    };
+
+    const generateTraffic = async () => {
+        try {
+            console.log('inside the generateTraffic function')
+            const serverResponse = await axios.post('http://localhost:5000/command', {
+                host: serverIp,
+                command: 'iperf3 -s -p 5500',
+            });
+            setServerOutput(serverResponse.data.output);
+
+            const clientResponse = await axios.post('http://localhost:5000/command', {
+                host: clientIp,
+                command: `iperf3 -c ${serverIp} -p 5500`,
+            });
+            setClientOutput(clientResponse.data.output);
+        } catch (error) {
+            console.error('Error generating traffic:', error);
+        }
+    };
+
+    return (
+        <div>
+            <h1>iPerf3 Traffic Generator</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                <div>
+                    <RemoteMachineComponent type="Client" onConnect={handleClientConnect} />
+                    <TerminalComponent output={clientOutput} />
+                </div>
+                <div>
+                    <RemoteMachineComponent type="Server" onConnect={handleServerConnect} />
+                    <TerminalComponent output={serverOutput} />
+                </div>
+            </div>
+            <button onClick={generateTraffic} disabled={!serverIp || !clientIp}>
+                Generate Traffic
+            </button>
+        </div>
+    );
+};
+
+export default App;
