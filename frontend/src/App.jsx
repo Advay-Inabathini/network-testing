@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import RemoteMachineComponent from './components/RemoteMachine';
 import TerminalComponent from './components/Terminal';
 import axios from 'axios';
+import stripAnsi from 'strip-ansi';
 
 const App = () => {
     const [serverOutput, setServerOutput] = useState('');
@@ -18,11 +19,11 @@ const App = () => {
     };
 
     const handleServerTerminalData = (data) => {
-        setServerOutput(data);
+        setServerOutput(stripAnsi(data));
     };
 
     const handleClientTerminalData = (data) => {
-        setClientOutput(data);
+        setClientOutput(stripAnsi(data));
     };
 
     const generateTraffic = async () => {
@@ -32,13 +33,13 @@ const App = () => {
                 host: serverIp,
                 command: 'iperf3 -s -p 5500',
             });
-            setServerOutput(serverResponse.data.output);
+            setServerOutput(stripAnsi(serverResponse.data.output));
 
             const clientResponse = await axios.post('http://localhost:5000/command', {
                 host: clientIp,
                 command: `iperf3 -c ${serverIp} -p 5500`,
             });
-            setClientOutput(clientResponse.data.output);
+            setClientOutput(stripAnsi(clientResponse.data.output));
         } catch (error) {
             console.error('Error generating traffic:', error);
         }
