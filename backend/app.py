@@ -73,9 +73,10 @@ def terminal_data():
     child = connections.get(host)
     try:
         if child:
-            child.sendline('echo FETCH_DATA')
-            child.expect('FETCH_DATA')
+            # child.sendline('echo FETCH_DATA')
+            # child.expect('FETCH_DATA')
             output = child.before.decode('utf-8')
+
             return jsonify({"data": output}), 200
         else:
             return jsonify({"error": "No active session"}), 500
