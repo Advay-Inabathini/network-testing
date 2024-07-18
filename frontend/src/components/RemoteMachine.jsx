@@ -1,39 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const RemoteMachine = () => {
+const RemoteMachineComponent = ({ type, onConnect, onTerminalData }) => {
+    const [ip, setIp] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [connected, setConnected] = useState(false);
-    const [terminalData, setTerminalData] = useState('');
-    const [error, setError] = useState(null);
 
     const connect = async () => {
         try {
             const response = await axios.post('http://localhost:5000/connect', {
-                // Request payload if any
+                host: ip,
+                username: username,
+                password: password,
             });
-            console.log('Connected:', response.data);
-            setConnected(true);
-            fetchTerminalData(); // Fetch terminal data after connection
-        } catch (err) {
-            setError(err.message || 'Error connecting to the server');
-            console.error('Error connecting:', err);
+            if (response.data.message === 'Connected') {
+                setConnected(true);
+                onConnect(ip);
+                fetchTerminalData(); // Fetch terminal data after connection
+            }
+        } catch (error) {
+            console.error('Error connecting:', error);
         }
     };
 
     const fetchTerminalData = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/terminal-data');
-            console.log('Terminal Data:', response.data);
-            setTerminalData(response.data);
-        } catch (err) {
-            setError(err.message || 'Error fetching terminal data');
-            console.error('Error fetching terminal data:', err);
+            const response = await axios.get('http://localhost:5000/terminal-data', {
+                params: { host: ip },
+            });
+            onTerminalData(response.data.data);
+        } catch (error) {
+            console.error('Error fetching terminal data:', error);
         }
     };
 
     useEffect(() => {
         if (connected) {
-            // Optionally, you can set an interval to periodically fetch terminal data
             const interval = setInterval(fetchTerminalData, 5000); // Fetch data every 5 seconds
             return () => clearInterval(interval);
         }
@@ -41,15 +44,30 @@ const RemoteMachine = () => {
 
     return (
         <div>
-            {!connected && <button onClick={connect}>Connect</button>}
-            {connected && <p>Connected to the remote machine.</p>}
-            {error && <p>Error: {error}</p>}
-            <div>
-                <h2>Terminal Output</h2>
-                <pre>{terminalData}</pre>
-            </div>
+            <h2>{type}</h2>
+            <input
+                type="text"
+                placeholder="IP Address"
+                value={ip}
+                onChange={(e) => setIp(e.target.value)}
+            />
+            <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+            <button onClick={connect} disabled={connected}>
+                {connected ? 'Connected' : 'Connect'}
+            </button>
         </div>
     );
 };
 
-export default RemoteMachine;
+export default RemoteMachineComponent;

@@ -17,6 +17,14 @@ const App = () => {
         setClientIp(ip);
     };
 
+    const handleServerTerminalData = (data) => {
+        setServerOutput(data);
+    };
+
+    const handleClientTerminalData = (data) => {
+        setClientOutput(data);
+    };
+
     const generateTraffic = async () => {
         try {
             console.log('inside the generateTraffic function')
@@ -41,11 +49,11 @@ const App = () => {
             <h1>iPerf3 Traffic Generator</h1>
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <div>
-                    <RemoteMachineComponent type="Client" onConnect={handleClientConnect} />
+                    <RemoteMachineComponent type="Client" onConnect={handleClientConnect} onTerminalData={handleClientTerminalData} />
                     <TerminalComponent output={clientOutput} />
                 </div>
                 <div>
-                    <RemoteMachineComponent type="Server" onConnect={handleServerConnect} />
+                    <RemoteMachineComponent type="Server" onConnect={handleServerConnect} onTerminalData={handleServerTerminalData} />
                     <TerminalComponent output={serverOutput} />
                 </div>
             </div>

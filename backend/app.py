@@ -10,10 +10,12 @@ connections = {}
 
 def ssh_connect(host, username, password):
     try:
+        global child
         child = pexpect.spawn(f'ssh {username}@{host}')
         child.expect("assword:")
         child.sendline(password)
         child.expect([r'\$', r'#', r'%'])
+        print(child.before.decode('utf-8'))
         return child
     except Exception as e:
         print(f"Error connecting to SSH: {e}")
@@ -63,6 +65,22 @@ def command():
     except Exception as e:
         print(f"Error in /command route: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+@app.route('/terminal-data', methods=['GET'])
+def terminal_data():
+    host = request.args.get('host')
+    child = connections.get(host)
+    try:
+        if child:
+            child.sendline('echo FETCH_DATA')
+            child.expect('FETCH_DATA')
+            output = child.before.decode('utf-8')
+            return jsonify({"data": output}), 200
+        else:
+            return jsonify({"error": "No active session"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
