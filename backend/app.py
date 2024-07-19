@@ -23,6 +23,8 @@ def ssh_connect(host, username, password):
 
 def send_command(process, command):
     try:
+        if 'iperf3 -s' in command:
+            command = f'nohup {command} &'
         process.expect(r".+")
         process.sendline(command)
         process.expect([r'\$', r'#', r'%'])
@@ -58,6 +60,7 @@ def command():
         if not connection:
             return jsonify({"error": "No connection found for host"}), 400
         output = send_command(connection, command)
+        print("output from the command function definition:", output)
         if output:
             return jsonify({"output": output})
         else:
