@@ -46,14 +46,14 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center">
-            <h1 className="text-3xl font-bold mt-8">iPerf3 Traffic Generator</h1>
-            <div className="flex justify-around mt-8 w-full max-w-6xl">
-                <div className="w-1/2 px-4">
+        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
+            <h1 className="text-3xl font-bold mb-8">iPerf3 Traffic Generator</h1>
+            <div className="flex justify-around w-full max-w-6xl">
+                <div className="flex flex-col items-center">
                     <RemoteMachineComponent type="Client" onConnect={handleClientConnect} onTerminalData={handleClientTerminalData} />
                     <TerminalComponent output={clientOutput} />
                 </div>
-                <div className="w-1/2 px-4">
+                <div className="flex flex-col items-center">
                     <RemoteMachineComponent type="Server" onConnect={handleServerConnect} onTerminalData={handleServerTerminalData} />
                     <TerminalComponent output={serverOutput} />
                 </div>

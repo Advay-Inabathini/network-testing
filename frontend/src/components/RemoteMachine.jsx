@@ -43,37 +43,37 @@ const RemoteMachineComponent = ({ type, onConnect, onTerminalData }) => {
     }, [connected]);
 
     return (
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h2 className="text-white text-center mb-4">{type}</h2>
-            <input
-                type="text"
-                placeholder="IP Address"
-                value={ip}
-                onChange={(e) => setIp(e.target.value)}
-                className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
-            />
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
-            />
-            <button
-                onClick={connect}
-                disabled={connected}
-                className={`w-full p-2 ${connected ? 'bg-green-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded`}
-            >
-                {connected ? 'Connected' : 'Connect'}
-            </button>
-        </div>
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm mx-auto">
+        <h2 className="text-white text-center mb-4">{type}</h2>
+        <input
+            type="text"
+            placeholder="IP Address"
+            value={ip}
+            onChange={(e) => setIp(e.target.value)}
+            className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
+        />
+        <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
+        />
+        <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
+        />
+        <button
+            onClick={connect}
+            disabled={connected}
+            className={`w-full p-2 ${connected ? 'bg-green-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded`}
+        >
+            {connected ? 'Connected' : 'Connect'}
+        </button>
+    </div>
     );
 };
 
