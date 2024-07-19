@@ -46,19 +46,23 @@ const App = () => {
     };
 
     return (
-        <div>
-            <h1>iPerf3 Traffic Generator</h1>
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <div>
+        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center">
+            <h1 className="text-3xl font-bold mt-8">iPerf3 Traffic Generator</h1>
+            <div className="flex justify-around mt-8 w-full max-w-6xl">
+                <div className="w-1/2 px-4">
                     <RemoteMachineComponent type="Client" onConnect={handleClientConnect} onTerminalData={handleClientTerminalData} />
                     <TerminalComponent output={clientOutput} />
                 </div>
-                <div>
+                <div className="w-1/2 px-4">
                     <RemoteMachineComponent type="Server" onConnect={handleServerConnect} onTerminalData={handleServerTerminalData} />
                     <TerminalComponent output={serverOutput} />
                 </div>
             </div>
-            <button onClick={generateTraffic} disabled={!serverIp || !clientIp}>
+            <button
+                onClick={generateTraffic}
+                disabled={!serverIp || !clientIp}
+                className="mt-8 bg-green-500 hover:bg-green-600 text-white p-4 rounded"
+            >
                 Generate Traffic
             </button>
         </div>
