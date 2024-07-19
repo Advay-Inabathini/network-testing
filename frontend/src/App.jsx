@@ -47,7 +47,7 @@ const App = () => {
 
     return (
         <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
-            <h1 className="text-3xl font-bold mb-8">iPerf3 Traffic Generator</h1>
+            <h1 className="text-5xl text-gray-600 font-bold mb-10">iPerf3 Traffic Generator</h1>
             <div className="flex justify-around w-full max-w-6xl">
                 <div className="flex flex-col items-center">
                     <RemoteMachineComponent type="Client" onConnect={handleClientConnect} onTerminalData={handleClientTerminalData} />
@@ -61,8 +61,7 @@ const App = () => {
             <button
                 onClick={generateTraffic}
                 disabled={!serverIp || !clientIp}
-                className="mt-8 bg-green-500 hover:bg-green-600 text-white p-4 rounded"
-            >
+                className='mt-8 bg-green-500 hover:bg-green-600 text-white p-4 rounded'>
                 Generate Traffic
             </button>
         </div>
